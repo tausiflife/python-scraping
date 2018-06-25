@@ -4,6 +4,11 @@
   become: yes
   become_user: root
   become_method: sudo
+  pre_tasks:
+    - name: set variables to be used in the playbook
+      set_fact:
+        chrome_download_url: https://chromedriver.storage.googleapis.com/2.37/chromedriver_linux64.zip
+        home_directory: /home/tshak
   tasks:
     - name: install pandas and splinter
       pip:
@@ -14,21 +19,21 @@
 
     - name: download chrome
       get_url:
-        url: https://chromedriver.storage.googleapis.com/2.37/chromedriver_linux64.zip
-        dest: /home/tshak
+        url: "{{ chrome_download_url }}"
+        dest: "{{ home_directory }}"
 
     - name: unzip the chrome browser
       unarchive:
-        src: /home/tshak/chromedriver_linux64.zip
-        dest: /home/tshak
+        src: "{{ home_directory }}"/chromedriver_linux64.zip
+        dest: "{{ home_directory }}"
 
     - name: check if the $home/bin directory exists
       file:
-        path: /home/tshak/bin
+        path: "{{ home_directory }}"/bin
         state: directory
 
     - name: move file to
-      shell: "mv /home/tshak/chromedriver /home/tshak/bin"
+      shell: "mv {{ home_directory }}/chromedriver {{ home_directory }/bin"
 
     - name: export to path
       shell: "echo \"export PATH=$PATH:$HOME/bin\" >> $HOME/.bash_profile"

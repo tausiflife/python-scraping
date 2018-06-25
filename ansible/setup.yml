@@ -1,0 +1,35 @@
+---
+- hosts: tshak-master
+  gather_facts: no
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: install pandas and splinter
+      pip:
+        name: "{{ item }}"
+      with_items:
+        - pandas
+        - splinter
+
+    - name: download chrome
+      get_url:
+        url: https://chromedriver.storage.googleapis.com/2.37/chromedriver_linux64.zip
+        dest: /home/tshak
+
+    - name: unzip the chrome browser
+      unarchive:
+        src: /home/tshak/chromedriver_linux64.zip
+        dest: /home/tshak
+
+    - name: check if the $home/bin directory exists
+      file:
+        path: /home/tshak/bin
+        state: directory
+
+    - name: move file to
+      shell: "mv /home/tshak/chromedriver /home/tshak/bin"
+
+    - name: export to path
+      shell: "echo \"export PATH=$PATH:$HOME/bin\" >> $HOME/.bash_profile"
+

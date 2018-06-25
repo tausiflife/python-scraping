@@ -3,8 +3,10 @@ import pandas as pd
 
 url = "https://www.google.com"
 search_keyword = "web scraping python"
-browser = Browser('chrome')  # open a chrome browser
-browser.visit(url)  # goes to the url
+browser = Browser('chrome')
+browser.visit(url)
+
+#This is obtained by inspecting the element from the chrome browser
 xpath = '//*[@id="lst-ib"]'
 
 search_bar = browser.find_by_xpath(xpath)[0]
@@ -20,7 +22,7 @@ search_results = browser.find_by_xpath(search_results_xpath)
 
 scraped_data = []
 for search_result in search_results:
-    title = search_result.text.encode('utf8')  # trust me
+    title = search_result.text.encode('utf8')
     link = search_result["href"]
     scraped_data.append((title, link))
 
